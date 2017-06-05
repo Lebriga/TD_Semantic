@@ -131,22 +131,56 @@ pop eax
         ## Evaluation
         motif = motif.replace("EVAL_OUTPUT", self.sons[2].e_toASM())
         
+        #optimization
+        motif = optimize(motif)        
+        
         g = open("motifrempli.asm", "w")
         g.write(motif)
-        print("------------------------------------")
-        print(optimize(motif))
-        print("------------------------------------")
+
         return motif
    
      
 def optimize(motif):
-    """Premiere ligne sert à splitter en fonciton de jump le string en liste de strings"""
+    #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = motif.split("jmp")
     
+    #application de la fonction traitment à chaque block
+    for i in range(len(liste)):
+        liste[i] = traitement(liste[i])
     
-    
-    """Ne pas enlever cette ligne à la fin de la fonction"""
+    #Ne pas enlever cette ligne à la fin de la fonction
     return "jmp".join(liste)
+    
+def traitement(string):
+    #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
+    liste = string.split("\n")
+    #pour savoir si eax et ebx on été pushed dans quel cas on peut reutiliser mov
+    eax_pushed = True  
+    ebx_pushed = True
+    #parcours du bloc en commencant par la fin
+    i = len(liste) - 1
+    while i >= 0:
+        #effacage de la ligne impliquant un mov si une autre la suit, et indication qu'elle n'a pas ete pushed le cas contraire
+        if "mov" in liste[i]:
+            if liste[i][4:7]=="eax":
+                if eax_pushed:
+                    eax_pushed = False
+                else:
+                    del liste[i]
+            if liste[i][4:7]=="ebx":
+                if ebx_pushed:
+                    ebx_pushed = False
+                else:
+                    del liste[i]
+        #indication que le move a ete pushed            
+        elif "push" in liste[i]:
+            if liste[i][4:7]=="eax":
+                eax_pushed = True
+            elif liste[i][4:7]=="ebx":
+                ebx_pushed = True
+        i -= 1
+    #Ne pas enlever cette ligne à la fin de la fonction
+    return "\n".join(liste)
         
         
         

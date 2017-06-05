@@ -6,7 +6,6 @@ Created on Wed May 17 08:11:17 2017
 
 
 """
-
 class AST:
     
     idWhile = 0
@@ -134,9 +133,21 @@ pop eax
         
         g = open("motifrempli.asm", "w")
         g.write(motif)
-        
-        
+        print("------------------------------------")
+        print(optimize(motif))
+        print("------------------------------------")
         return motif
+   
+     
+def optimize(motif):
+    """Premiere ligne sert à splitter en fonciton de jump le string en liste de strings"""
+    liste = motif.split("jmp")
+    
+    
+    
+    """Ne pas enlever cette ligne à la fin de la fonction"""
+    return "jmp".join(liste)
+        
         
         
         

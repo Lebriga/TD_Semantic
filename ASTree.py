@@ -159,9 +159,15 @@ def traitement(string):
     ebx_pushed = True
     #parcours du bloc en commencant par la fin
     i = len(liste) - 1
-    while i >= 0:
+    while i > -1:
+        #indication que le move a ete pushed            
+        if "push" in liste[i]:
+            if liste[i][5:8] =="eax":
+                eax_pushed = True
+            elif liste[i][5:8]=="ebx":
+                ebx_pushed = True
         #effacage de la ligne impliquant un mov si une autre la suit, et indication qu'elle n'a pas ete pushed le cas contraire
-        if "mov" in liste[i]:
+        elif "mov" in liste[i]:
             if liste[i][4:7]=="eax":
                 if eax_pushed:
                     eax_pushed = False
@@ -172,12 +178,6 @@ def traitement(string):
                     ebx_pushed = False
                 else:
                     del liste[i]
-        #indication que le move a ete pushed            
-        elif "push" in liste[i]:
-            if liste[i][4:7]=="eax":
-                eax_pushed = True
-            elif liste[i][4:7]=="ebx":
-                ebx_pushed = True
         i -= 1
     #Ne pas enlever cette ligne à la fin de la fonction
     return "\n".join(liste)

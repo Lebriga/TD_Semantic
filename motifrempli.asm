@@ -37,11 +37,13 @@ debutboucle1:
 
 cmp eax, 0
 jz finboucle1
+mov eax, [Y]
 push eax
 pop ebx
 add eax, ebx
 
 mov[Y], eax
+mov eax, 1
 push eax
 mov eax, [X]
 pop ebx

@@ -158,15 +158,36 @@ def optimize(motif):
 def traitement(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
     liste = string.split("\n")
-    
-    racine = abre_opti.noeud_opti
-
+    listenoeuds = []
+    #creation premier noeud de l'arbre du bloc
+    racine = arbre_opti.noeud_opt('valeur', -1)
+    listenoeuds.append(racine)
+    #######################################
     #parcours du bloc et création de l'arbre
     for i in range(len(liste)):
-        print('test')
-        
+        print("-------------------------")
+        print(i)
+        ligne = reconnait(liste[i])
+        if ligne[0][0] == 'mov':
+            print(ligne)
+        print("-------------------------")
+    
+    #######################################
+    #Utilisation de l'arbre pour supprimer lignes
+    
     #Ne pas enlever cette ligne à la fin de la fonction
     return "\n".join(liste)
+
+#separe phrase en [[1er terme, 2eme terme], valeur]
+def reconnait(string):
+    liste = string.split(",")
+    liste[0] = liste[0].split(" ")
+    #suppression espace valeur
+    if len(liste) > 1:
+        if liste[1][0] == " ":
+            liste[1] = liste[1][1:]
+    return liste
+
     
 '''def traitement(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings

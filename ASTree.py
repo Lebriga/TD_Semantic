@@ -139,7 +139,10 @@ pop eax
 
         return motif
    
-     
+ ####################################
+ ###################################
+ ###################################
+import arbre_opti    
 def optimize(motif):
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = motif.split("jmp")
@@ -150,8 +153,22 @@ def optimize(motif):
     
     #Ne pas enlever cette ligne à la fin de la fonction
     return "jmp".join(liste)
-    
+
+
 def traitement(string):
+    #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
+    liste = string.split("\n")
+    
+    racine = abre_opti.noeud_opti
+
+    #parcours du bloc et création de l'arbre
+    for i in range(len(liste)):
+        print('test')
+        
+    #Ne pas enlever cette ligne à la fin de la fonction
+    return "\n".join(liste)
+    
+'''def traitement(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
     liste = string.split("\n")
     #pour savoir si eax et ebx on été pushed dans quel cas on peut reutiliser mov
@@ -180,7 +197,7 @@ def traitement(string):
                     del liste[i]
         i -= 1
     #Ne pas enlever cette ligne à la fin de la fonction
-    return "\n".join(liste)
+    return "\n".join(liste)'''
         
         
         

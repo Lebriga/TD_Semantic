@@ -19,3 +19,8 @@ class noeud_opt:
         
     def add_fils(self, noeud):
         self.fils.append(noeud)
+        
+    def print_arbre(self):
+        result = []
+        
+        return result

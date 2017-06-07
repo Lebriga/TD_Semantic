@@ -158,10 +158,10 @@ def optimize(motif):
 def traitement(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
     liste = string.split("\n")
-    listenoeuds = []
+    liste_noeuds = []
     #creation premier noeud de l'arbre du bloc
     racine = arbre_opti.noeud_opt('valeur', -1)
-    listenoeuds.append(racine)
+    liste_noeuds 
     #######################################
     #parcours du bloc et création de l'arbre
     for i in range(len(liste)):
@@ -169,7 +169,9 @@ def traitement(string):
         print(i)
         ligne = reconnait(liste[i])
         if ligne[0][0] == 'mov':
-            print(ligne)
+            noeud = arbre_opti.noeud_opt(ligne[0][1], i)
+            recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+            liste_noeuds.append(noeud)
         print("-------------------------")
     
     #######################################
@@ -187,6 +189,14 @@ def reconnait(string):
         if liste[1][0] == " ":
             liste[1] = liste[1][1:]
     return liste
+    
+def recherchenoeud(liste, nom, racine):
+    i = len(liste) -1
+    while i >= 0:
+        if liste[i].nom == nom:
+            return liste[i]
+        i -=1
+    return racine
 
     
 '''def traitement(string):

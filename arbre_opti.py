@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Jun  7 09:56:40 2017
+Created on Wed Jun  7 09:07:05 2017
 
-@author: petrucusnir
+@author: henry
 """
 
 class noeud_opt: 
@@ -17,9 +17,10 @@ class noeud_opt:
     """def add_parent(self, noeud):
         self.parent.append(noeud)"""
         
+
     def add_fils(self, noeud):
         self.fils.append(noeud)
-        
+
     def print_arbre(self):
         result = []
         

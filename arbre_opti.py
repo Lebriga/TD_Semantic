@@ -22,6 +22,9 @@ class noeud_opt:
         self.fils.append(noeud)
 
     def print_arbre(self):
-        result = []
-        
+        result = [self.nom + '_' + str(self.ligne_script)]
+        if len(self.fils) != 0:
+            for i in self.fils:
+                result.append(i.print_arbre())
+            
         return result

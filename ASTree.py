@@ -199,7 +199,7 @@ def traitement(string):
         if supprimes:
             print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
             liste_noeuds[i].suppress()
-            liste[liste_noeuds[i].ligne_script]
+            liste[liste_noeuds[i].ligne_script] = ''
         i = i - 1
 
 

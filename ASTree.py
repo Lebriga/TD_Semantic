@@ -142,7 +142,8 @@ pop eax
  ####################################
  ###################################
  ###################################
-import arbre_opti    
+import arbre_opti
+
 def optimize(motif):
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = motif.split("jmp")
@@ -161,21 +162,57 @@ def traitement(string):
     liste_noeuds = []
     #creation premier noeud de l'arbre du bloc
     racine = arbre_opti.noeud_opt('valeur', -1)
-    liste_noeuds 
     #######################################
     #parcours du bloc et création de l'arbre
     for i in range(len(liste)):
         print("-------------------------")
         print(i)
         ligne = reconnait(liste[i])
+        print(ligne)
         if ligne[0][0] == 'mov':
+            # crée le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
             noeud = arbre_opti.noeud_opt(ligne[0][1], i)
+            # ajoute en tant que fils le noeud créé auparavant au dernier noeud de l'arbre représentant le registre ligne[1]
             recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+            # ajoute le noeud à la liste des noeuds
             liste_noeuds.append(noeud)
+        if ligne[0][0] == 'push':
+            noeud = arbre_opti.noeud_opt('push', i)
+            recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
+
+    print '---------------------------------------------------'
+    print 'Arbre avant suppressions'
+    print(racine.print_arbre())
+    for n in liste_noeuds:
+        print(n.nom + '_'+str(n.ligne_script))
+    #suppression des lignes
+    i = len(liste_noeuds) - 1
+    while i>-1:
+        l = liste_noeuds[i].fils
+        print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
+        print(len(l))
+
+        supprimes = True
+        for j in range(len(l)):
+            if l[j].nom != 'suppressed':
+                supprimes = False
+        if supprimes:
+            print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
+            liste_noeuds[i].suppress()
+            liste[liste_noeuds[i].ligne_script]
+        i = i - 1
+
+
+
+
         print("-------------------------")
+        print("Arbre après suppression")
+        print(racine.print_arbre())
+        print("---------------------------------------------------------------------------")
     
-    #######################################
-    #Utilisation de l'arbre pour supprimer lignes
+    print('------')
+    print('Suppressions terminées')
+    print('------')
     
     #Ne pas enlever cette ligne à la fin de la fonction
     return "\n".join(liste)

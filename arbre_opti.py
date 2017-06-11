@@ -28,3 +28,6 @@ class noeud_opt:
                 result.append(i.print_arbre())
             
         return result
+
+    def suppress(self):
+        self.nom = 'suppressed'

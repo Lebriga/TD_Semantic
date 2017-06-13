@@ -159,6 +159,7 @@ def optimize(motif):
 def traitement(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
     liste = string.split("\n")
+    #en plus de faire partie de l'arbre tous les noeuds representants une opération mov dans un registre seront rangés dans cette liste afin d'êtres parcourus à la fin pour s'assurer qu'ils ont en fils push, cmp, ou add, le cas contraire ils seront supprimés
     liste_noeuds = []
     #creation premier noeud de l'arbre du bloc
     racine = arbre_opti.noeud_opt('valeur', -1)
@@ -176,12 +177,29 @@ def traitement(string):
             recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
             # ajoute le noeud à la liste des noeuds
             liste_noeuds.append(noeud)
-        if ligne[0][0] == 'push':
+        #si push on rajoute un noeud push en fils de noeud pushé mais on NE rajoute PAS le noeud push à liste_noeud (liste des registres)
+        elif ligne[0][0] == 'push':
             noeud = arbre_opti.noeud_opt('push', i)
             recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
+        #idem mais pour cmp et il  a cette fois deux fils
+        elif ligne[0][0] == 'cmp':
+            noeud = arbre_opti.noeud_opt('cmp', i)
+            recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
+            recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+        #idem pour add mais il faut distinguer les add dans esp et les add dans un registre dans quel cas il faut qu'il soit push après
+        elif ligne[0][0] == 'add':
+            if ligne[0][1] == 'esp':
+                noeud = arbre_opti.noeud_opt('add', i)
+                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+            else:
+                noeud = arbre_opti.noeud_opt(ligne[0][1], i)
+                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+                liste_noeuds.append(noeud)
+                
+                
 
-    print '---------------------------------------------------'
-    print 'Arbre avant suppressions'
+    print('---------------------------------------------------')
+    print ('Arbre avant suppressions')
     print(racine.print_arbre())
     for n in liste_noeuds:
         print(n.nom + '_'+str(n.ligne_script))

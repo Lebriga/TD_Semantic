@@ -2,7 +2,7 @@
 """
 Created on Wed May 17 08:11:17 2017
 
-@author: Gabriel & Petru
+@author: François
 
 
 """
@@ -143,12 +143,46 @@ pop eax
  ###################################
  ###################################
 import arbre_opti
+import arbre_blocks
 
 def optimize(motif):
-    #
+    #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
+    liste = motif.split("jmp")
+    #liste des donnes issus de la construction
+    listeconstructions = []
+    #liste blocks
+    listeblocks = []
+    #initialisation arbre des blocks
+    SageRacine = arbre_blocks.noeud_block("SageRacine")
+    #parcours des blocks pour construire arbreS
+    for i in range(len(liste)):
+        listeconstructions.append(construction(liste[i]))
+        newblock = arbre_blocks.noeud_block(recherche_titre_block(liste[i]))
+        newblock.arrivalgates = recherche_arrive_block(liste[i])
+        listeblocks.append(newblock)
+        if i > 0:
+            listeblocks[i-1].destinationgates = newblock.nomJ
+        SageRacine.fils.append(newblock)
+        print('###############################################')
+        #print(SageRacine.recherche_parArrivalGate())
+        print(recherche_titre_block(liste[i]))
+        print(newblock.arrivalgates)
+        print('###############################################')
+    for j in range(len(listeblocks)):
+        print('####################--------------------------###########################')
+        print(listeblocks[j].arrivalgates)
+        print(listeblocks[j].destinationgate)
+        print('####################--------------------------###########################')
+    #parcours des blocks pour supprimer
+    for i in range(len(liste)):
+        liste[i] = supression(listeconstructions[i][0], listeconstructions[i][1], listeconstructions[i][2])
+    
+    #Ne pas enlever cette ligne à la fin de la fonction
+    return "jmp".join(liste)
 
 
-def traitement(string):
+
+def construction(string):
     #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
     liste = string.split("\n")
     #en plus de faire partie de l'arbre tous les noeuds representants une opération mov dans un registre seront rangés dans cette liste afin d'êtres parcourus à la fin pour s'assurer qu'ils ont en fils push, cmp, ou add, le cas contraire ils seront supprimés
@@ -158,10 +192,7 @@ def traitement(string):
     #######################################
     #parcours du bloc et création de l'arbre
     for i in range(len(liste)):
-        print("-------------------------")
-        print(i)
         ligne = reconnait(liste[i])
-        print(ligne)
         if ligne[0][0] == 'mov':
             # crée le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
             noeud = arbre_opti.noeud_opt(ligne[0][1], i)
@@ -187,44 +218,29 @@ def traitement(string):
                 noeud = arbre_opti.noeud_opt(ligne[0][1], i)
                 recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
                 liste_noeuds.append(noeud)
-                
+        
+    return [liste, liste_noeuds, racine]
                 
 
-    print('---------------------------------------------------')
-    print ('Arbre avant suppressions')
-    print(racine.print_arbre())
-    for n in liste_noeuds:
-        print(n.nom + '_'+str(n.ligne_script))
+def supression(liste, liste_noeuds, racine):
     #######################
     #suppression des lignes
     #######################
     i = len(liste_noeuds) - 1
     while i>-1:
         l = liste_noeuds[i].fils
-        print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
-        print(len(l))
+        #print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
+        #print(len(l))
 
         supprimes = True
         for j in range(len(l)):
             if l[j].nom != 'suppressed':
                 supprimes = False
         if supprimes:
-            print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
+            #print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
             liste_noeuds[i].suppress()
             liste[liste_noeuds[i].ligne_script] = ''
         i = i - 1
-
-
-
-
-        print("-------------------------")
-        print("Arbre après suppression")
-        print(racine.print_arbre())
-        print("---------------------------------------------------------------------------")
-    
-    print('------')
-    print('Suppressions terminées')
-    print('------')
     
     #Ne pas enlever cette ligne à la fin de la fonction
     return "\n".join(liste)
@@ -234,7 +250,7 @@ def reconnait(string):
     liste = string.split(",")
     liste[0] = liste[0].split(" ")
     #correction syntaxe : mov[x] := mov [x]
-    if 'mov' in liste[0][0] and len(liste[0][0]) > 3: 
+    if 'mov' in liste[0][0] and len(liste[0][0]) > 3:       
         liste[0].append(liste[0][0][3:])
         liste[0][0] = liste[0][0][0:3]
 
@@ -243,6 +259,10 @@ def reconnait(string):
     if len(liste) > 1:
         if liste[1][0] == " ":
             liste[1] = liste[1][1:]
+    #print('-----------------------------------------------------------------------------------------------------------------------------------------')
+    #print(liste)
+    #print('-----------------------------------------------------------------------------------------------------------------------------------------')
+    return liste
     
 def recherchenoeud(liste, nom, racine):
     i = len(liste) -1
@@ -252,18 +272,17 @@ def recherchenoeud(liste, nom, racine):
         i -=1
     return racine
     
-###############################################################################
-def creation_blocks():
-    #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
-    liste = motif.split("jmp")
+def recherche_titre_block(string):
+    liste = string.split("\n")
+    return liste[0]
     
-    #application de la fonction traitment à chaque block
+def recherche_arrive_block(string):
+    liste = string.split("\n")
+    result = []
     for i in range(len(liste)):
-        liste[i] = traitement(liste[i])
+        if ":" in liste[i]:
+            result.append(liste[i])
+    return result
     
-    #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join(liste)
-        
-        
-        
-        
+    
+###############################################################################

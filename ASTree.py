@@ -267,9 +267,3 @@ def recherchenoeud(liste, nom, racine):
     return racine
     
 ###############################################################################
-def creation_blocks():
-    
-        
-        
-        
-        

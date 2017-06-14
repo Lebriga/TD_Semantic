@@ -4,8 +4,8 @@ extern printf, atoi
 section .data
 message: db 'Hello World %d', 10, 0
 message_erreur: db "Il y a %d arguments requis", 10, 0
-Y: dd 0
 X: dd 0
+Y: dd 0
 t: dd 0
 
 section .text
@@ -45,20 +45,20 @@ push eax
 pop ebx
 
 
-mov[Y], eax
+
 mov eax, 1
 push eax
 
 pop ebx
 sub eax, ebx
 
-mov[X], eax
+
 jmp debutboucle1
 finboucle1:
 
 
 
-mov[t], eax
+
 
 mov eax, [Y]
 

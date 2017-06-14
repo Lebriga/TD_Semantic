@@ -203,7 +203,9 @@ def traitement(string):
     print(racine.print_arbre())
     for n in liste_noeuds:
         print(n.nom + '_'+str(n.ligne_script))
+    #######################
     #suppression des lignes
+    #######################
     i = len(liste_noeuds) - 1
     while i>-1:
         l = liste_noeuds[i].fils
@@ -239,10 +241,21 @@ def traitement(string):
 def reconnait(string):
     liste = string.split(",")
     liste[0] = liste[0].split(" ")
+    #correction syntaxe : mov[x] := mov [x]
+    if 'mov' in liste[0][0] and len(liste[0][0]) > 3:
+        print('---------------------------------------------------Avant-----------------------------------------------------------------------------')
+        print(liste)       
+        liste[0].append(liste[0][0][3:])
+        liste[0][0] = liste[0][0][0:3]
+
+
     #suppression espace valeur
     if len(liste) > 1:
         if liste[1][0] == " ":
             liste[1] = liste[1][1:]
+    print('-----------------------------------------------------------------------------------------------------------------------------------------')
+    print(liste)
+    print('-----------------------------------------------------------------------------------------------------------------------------------------')
     return liste
     
 def recherchenoeud(liste, nom, racine):
@@ -252,38 +265,6 @@ def recherchenoeud(liste, nom, racine):
             return liste[i]
         i -=1
     return racine
-
-    
-'''def traitement(string):
-    #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
-    liste = string.split("\n")
-    #pour savoir si eax et ebx on été pushed dans quel cas on peut reutiliser mov
-    eax_pushed = True  
-    ebx_pushed = True
-    #parcours du bloc en commencant par la fin
-    i = len(liste) - 1
-    while i > -1:
-        #indication que le move a ete pushed            
-        if "push" in liste[i]:
-            if liste[i][5:8] =="eax":
-                eax_pushed = True
-            elif liste[i][5:8]=="ebx":
-                ebx_pushed = True
-        #effacage de la ligne impliquant un mov si une autre la suit, et indication qu'elle n'a pas ete pushed le cas contraire
-        elif "mov" in liste[i]:
-            if liste[i][4:7]=="eax":
-                if eax_pushed:
-                    eax_pushed = False
-                else:
-                    del liste[i]
-            if liste[i][4:7]=="ebx":
-                if ebx_pushed:
-                    ebx_pushed = False
-                else:
-                    del liste[i]
-        i -= 1
-    #Ne pas enlever cette ligne à la fin de la fonction
-    return "\n".join(liste)'''
         
         
         

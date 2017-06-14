@@ -265,6 +265,10 @@ def recherchenoeud(liste, nom, racine):
             return liste[i]
         i -=1
     return racine
+    
+###############################################################################
+def creation_blocks():
+    
         
         
         

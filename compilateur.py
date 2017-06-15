@@ -77,13 +77,13 @@ while True:
 
 ## parseur
 import ply.yacc as yacc # lexer nécessaire
-import ASTree3
+import ASTree4
 
 def p_programme(p):
     '''programme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO
     '''
     try:
-        p[0] = ASTree3.AST("programme","main")
+        p[0] = ASTree4.AST("programme","main")
         p[0].sons = [p[3], p[6], p[10]]
     except:
         pass
@@ -107,14 +107,14 @@ def p_commande(p):
                   | WHILE LPAREN expression RPAREN LACO commande RACO'''
     try: 
         if len(p) == 8:
-            p[0] = ASTree3.AST("commande", "while")
+            p[0] = ASTree4.AST("commande", "while")
             p[0].sons = [p[3], p[6]]
         else:
             if p[2] == "=":
-                p[0] = ASTree3.AST("AFFECT", "=")
+                p[0] = ASTree4.AST("AFFECT", "=")
                 p[0].sons = [p[1], p[3]]
             else:
-                p[0] = ASTree3.AST("END", ";")
+                p[0] = ASTree4.AST("END", ";")
                 p[0].sons =[p[1], p[3]]
     except:
         pass
@@ -125,13 +125,13 @@ def p_expression(p):
                     | expression OPBIN expression'''
     try:
         if len(p) > 2:
-            p[0] = ASTree3.AST("OPBIN", p[2])
+            p[0] = ASTree4.AST("OPBIN", p[2])
             p[0].sons = [p[1], p[3]]
         else:
             if type(p[1]) == str:
-                p[0] = ASTree3.AST("ID", p[1])
+                p[0] = ASTree4.AST("ID", p[1])
             else:
-                p[0] = ASTree3.AST("NUMBER", p[1])
+                p[0] = ASTree4.AST("NUMBER", p[1])
     except:
         pass
 

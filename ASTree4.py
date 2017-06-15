@@ -6,9 +6,9 @@ Created on Wed May 17 08:11:17 2017
 
 
 """
-'''
+
 import re
-m = search(r'(\s)+:', line)
+'''m = search(r'(\s)+:', line)
 if m:
     m.groupe(1)'''
     
@@ -166,35 +166,24 @@ def ajouteur_de_fils(listeBlocks):
                 if i.destinationgate :
                     print('----------------------', i.destinationgate, '--------------------------', y)
                     if i.destinationgate[1:] in y :
-                        print('#############################')               
+                        print('#############################')                        
     return None
 
 def optimize(motif):
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
-    liste = motif.split("jmp")
-    #liste des noeuds dans l'ordre pour reconstruction syntaxique
-    listeblocks = []
+    liste = re.split(":", motif)
+    for i in liste:
+        i.split("jmp")
 
-    RacineBlock = arbre_blocks.noeud_block(-1)
-    
-    #rajout des noeuds à la liste et création
-    for i in range(len(liste)):
-        newnode = arbre_blocks.noeud_block(i) 
-        newnode.contenu = liste[i] #on rajoute le texte du block dans le noeud
-        newnode.determine_arrivalgates()  #on détermine les arrivalgates du noeud et on les stock
-        listeblocks.append(newnode) #on rajoute le block à la liste des blocks
-        
-    #rajout des departureGate au noeuds
-    ajouteur_de_departureGate(listeblocks)
-    
-    #rajout des fils au noeuds
-    ajouteur_de_fils(listeblocks)
-    
-    #reconstruction syntaxique à partir d'arbre
-    result = []
-    for j in range(len(listeblocks)):
-        #print('------', listeblocks[j].id, '------', listeblocks[j].destinationgate, '--------', listeblocks[j].arrivalgates)
-        result.append(listeblocks[j].contenu)
 
+    for i in liste:
+        for j in i:
+            print('-----------------------')
+            print(j)
+            print('-----------------------')
+            
     #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join(result)    
+    for j in liste:
+        j = "jmp".join(j)
+    liste = ":".join(liste)
+    return liste  

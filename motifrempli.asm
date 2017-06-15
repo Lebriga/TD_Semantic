@@ -5,8 +5,8 @@ section .data
 message: db 'Hello World %d', 10, 0
 message_erreur: db "Il y a %d arguments requis", 10, 0
 Y: dd 0
-X: dd 0
 t: dd 0
+X: dd 0
 
 section .text
 main:

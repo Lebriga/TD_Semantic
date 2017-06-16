@@ -181,7 +181,7 @@ def optimize(motif):
     #traitent de chaque contenu de chaque block    
     traiter_arbre(listeblocks)
     
-    print('-------------------------------------------')
+    '''print('-------------------------------------------')
     print('-------------------------------------------')
     print('-------------------------------------------')
     
@@ -191,7 +191,7 @@ def optimize(motif):
         #print(listeblocks[i].arrivalgate)
         #print(listeblocks[i].destinationgate)
         #print("---------------------")
-        print(listeblocks[i].contenu)
+        print(listeblocks[i].contenu)'''
         
     #reassemblage final
     testlist = []

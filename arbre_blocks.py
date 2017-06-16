@@ -10,7 +10,8 @@ class noeud_block:
     
     
     def __init__(self, _id):
-        self.arbreopti = None
+        self.read = []
+        self.wrote = []
         self.arrivalgate = None
         self.contenu = None
         self.destinationgate = None
@@ -25,7 +26,7 @@ class noeud_block:
         self.fils.append(noeud)
 
     def print_arbre(self):
-        result = [self.nom + '_' + str(self.ligne_script)]
+        result = [self.id + '_' + self.contenu]
         if len(self.fils) != 0:
             for i in self.fils:
                 result.append(i.print_arbre())     
@@ -42,10 +43,7 @@ class noeud_block:
         #######################################
         #parcours du bloc et création de l'arbre
         for i in range(len(liste)):
-            print("-------------------------")
-            print(i)
             ligne = reconnait(liste[i])
-            print(ligne)
             if ligne[0][0] == 'mov':
                 # crée le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
                 noeud = arbre_opti.noeud_opt(ligne[0][1], i)
@@ -71,8 +69,49 @@ class noeud_block:
                     noeud = arbre_opti.noeud_opt(ligne[0][1], i)
                     recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
                     liste_noeuds.append(noeud)
-                    
-                    
+        
+        #####################
+        #creation read/wrote pour trouver elements qui sont utilisés dans autres blocs
+        #####################
+
+        #remplisache liste des wrote
+        y = len(liste_noeuds) - 1
+        while y>-1:
+            already_exists = False
+            for m in self.wrote:
+                if liste_noeuds[y].nom == m.nom:
+                    already_exists = True      
+            if not already_exists:
+                self.wrote.append(liste_noeuds[y])
+            y = y - 1
+        '''print('----------')
+        for n in self.wrote:
+            print(n.nom)'''
+        
+        
+        #remplissaage liste des read
+        liste_overwrote = []
+        for i in range(len(liste)):
+            ligne = reconnait(liste[i])
+            if len(ligne) > 1:
+                already_exists_or_overwrote = False
+                for m in self.read:
+                    if ligne[1] == m:
+                        already_exists_or_overwrote = True
+                for m in liste_overwrote:
+                    if ligne[1] == m:
+                        already_exists_or_overwrote = True
+                writing = racine.recherche_par_lignescript(i)
+                if writing:
+                    liste_overwrote.append(writing.nom)
+                if not already_exists_or_overwrote:
+                    self.read.append(ligne[1])
+                print(i)
+        print('__'.join(self.read))
+                
+                
+            
+            
     
         '''print('---------------------------------------------------')
         print ('Arbre avant suppressions')
@@ -85,15 +124,15 @@ class noeud_block:
         i = len(liste_noeuds) - 1
         while i>-1:
             l = liste_noeuds[i].fils
-            print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
-            print(len(l))
+            '''print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
+            print(len(l))'''
     
             supprimes = True
             for j in range(len(l)):
                 if l[j].nom != 'suppressed':
                     supprimes = False
             if supprimes:
-                print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
+                #print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
                 liste_noeuds[i].suppress()
                 liste[liste_noeuds[i].ligne_script] = ''
             i = i - 1

@@ -2,7 +2,7 @@
 """
 Created on Wed May 17 08:11:17 2017
 
-@author: François
+@author: petrucusnir
 
 
 """
@@ -170,13 +170,13 @@ def optimize(motif):
     (initialisation, Lparse) = create_arbre(motif, listeblocks)
     
     
-    for i in range(len(listeblocks)):
-        print("---------------------")
+    #for i in range(len(listeblocks)):
+        #print("---------------------")
         #print("---------------------")
         #print(listeblocks[i].arrivalgate)
         #print(listeblocks[i].destinationgate)
         #print("---------------------")
-        print(listeblocks[i].contenu)
+        #print(listeblocks[i].contenu)
     
     #traitent de chaque contenu de chaque block    
     traiter_arbre(listeblocks)

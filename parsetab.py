@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'programmeNUMBER ID OPBIN LPAREN RPAREN LACO RACO END AFFECT COMMA FINISH PRINT RETURN IF WHILE MAINprogramme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO\n    enum : ID\n              | ID COMMA enum\n    empty :commande : ID AFFECT expression\n                  | commande END commande\n                  | WHILE LPAREN expression RPAREN LACO commande RACOexpression :  NUMBER\n                    | ID\n                    | expression OPBIN expression'
+_lr_signature = 'programmeNUMBER ID OPBIN LPAREN RPAREN LACO RACO END AFFECT COMMA FINISH MAIN IF RETURN WHILE PRINTprogramme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO\n    enum : ID\n              | ID COMMA enum\n    empty :commande : ID AFFECT expression\n                  | commande END commande\n                  | WHILE LPAREN expression RPAREN LACO commande RACOexpression :  NUMBER\n                    | ID\n                    | expression OPBIN expression'
     
-_lr_action_items = {'LACO':([6,24,],[8,27,]),'ID':([3,7,8,14,15,16,23,25,27,],[5,5,12,12,20,20,20,20,12,]),'LPAREN':([1,11,17,],[3,15,23,]),'FINISH':([10,18,20,21,22,28,32,],[13,-6,-9,-8,-5,-10,-7,]),'END':([10,18,20,21,22,28,30,32,],[14,14,-9,-8,-5,-10,14,-7,]),'$end':([2,31,],[0,-1,]),'RPAREN':([4,5,9,19,20,21,26,28,],[6,-2,-3,24,-9,-8,29,-10,]),'OPBIN':([19,20,21,22,26,28,],[25,-9,-8,25,25,25,]),'MAIN':([0,],[1,]),'COMMA':([5,],[7,]),'AFFECT':([12,],[16,]),'WHILE':([8,14,27,],[11,11,11,]),'RACO':([18,20,21,22,28,29,30,32,],[-6,-9,-8,-5,-10,31,32,-7,]),'NUMBER':([15,16,23,25,],[21,21,21,21,]),'PRINT':([13,],[17,]),}
+_lr_action_items = {'WHILE':([9,15,26,],[10,10,10,]),'LACO':([7,23,],[9,26,]),'ID':([3,6,9,13,14,15,24,25,26,],[4,4,11,18,18,11,18,18,11,]),'RPAREN':([4,5,8,17,18,19,27,28,],[-2,7,-3,23,-9,-8,-10,30,]),'MAIN':([0,],[2,]),'NUMBER':([13,14,24,25,],[19,19,19,19,]),'FINISH':([12,18,19,20,21,27,31,],[16,-9,-8,-5,-6,-10,-7,]),'$end':([1,32,],[0,-1,]),'LPAREN':([2,10,22,],[3,13,25,]),'AFFECT':([11,],[14,]),'PRINT':([16,],[22,]),'COMMA':([4,],[6,]),'RACO':([18,19,20,21,27,29,30,31,],[-9,-8,-5,-6,-10,31,32,-7,]),'END':([12,18,19,20,21,27,29,31,],[15,-9,-8,-5,15,-10,15,-7,]),'OPBIN':([17,18,19,20,27,28,],[24,-9,-8,24,24,24,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'commande':([8,14,27,],[10,18,30,]),'expression':([15,16,23,25,],[19,22,26,28,]),'enum':([3,7,],[4,9,]),'programme':([0,],[2,]),}
+_lr_goto_items = {'commande':([9,15,26,],[12,21,29,]),'expression':([13,14,24,25,],[17,20,27,28,]),'enum':([3,6,],[5,8,]),'programme':([0,],[1,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -26,14 +26,14 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> programme","S'",1,None,None,None),
-  ('programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO','programme',12,'p_programme','compilateur.py',84),
-  ('enum -> ID','enum',1,'p_enum','compilateur.py',93),
-  ('enum -> ID COMMA enum','enum',3,'p_enum','compilateur.py',94),
-  ('empty -> <empty>','empty',0,'p_empty','compilateur.py',103),
-  ('commande -> ID AFFECT expression','commande',3,'p_commande','compilateur.py',106),
-  ('commande -> commande END commande','commande',3,'p_commande','compilateur.py',107),
-  ('commande -> WHILE LPAREN expression RPAREN LACO commande RACO','commande',7,'p_commande','compilateur.py',108),
-  ('expression -> NUMBER','expression',1,'p_expression','compilateur.py',124),
-  ('expression -> ID','expression',1,'p_expression','compilateur.py',125),
-  ('expression -> expression OPBIN expression','expression',3,'p_expression','compilateur.py',126),
+  ('programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO','programme',12,'p_programme','compilateur.py',83),
+  ('enum -> ID','enum',1,'p_enum','compilateur.py',92),
+  ('enum -> ID COMMA enum','enum',3,'p_enum','compilateur.py',93),
+  ('empty -> <empty>','empty',0,'p_empty','compilateur.py',102),
+  ('commande -> ID AFFECT expression','commande',3,'p_commande','compilateur.py',105),
+  ('commande -> commande END commande','commande',3,'p_commande','compilateur.py',106),
+  ('commande -> WHILE LPAREN expression RPAREN LACO commande RACO','commande',7,'p_commande','compilateur.py',107),
+  ('expression -> NUMBER','expression',1,'p_expression','compilateur.py',123),
+  ('expression -> ID','expression',1,'p_expression','compilateur.py',124),
+  ('expression -> expression OPBIN expression','expression',3,'p_expression','compilateur.py',125),
 ]

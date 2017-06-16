@@ -31,3 +31,10 @@ class noeud_opt:
 
     def suppress(self):
         self.nom = 'suppressed'
+        
+    def recherche_par_lignescript(self, ligne):
+        if self.ligne_script == ligne:
+            return self
+        for i in self.fils:
+            return i.recherche_par_lignescript(ligne)
+            

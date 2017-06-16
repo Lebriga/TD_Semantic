@@ -78,7 +78,6 @@ while True:
 
 ## parseur
 import ply.yacc as yacc # lexer nécessaire
-import ASTree3
 
 def p_programme(p):
     '''programme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO

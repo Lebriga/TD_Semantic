@@ -11,8 +11,6 @@ import re
 m = search(r'(\s)+:', line)
 if m:
     m.groupe(1)'''
-    
-import arbre_blocks
 class AST:
     
     idWhile = 0
@@ -154,23 +152,8 @@ pop eax
  ###################################
 import arbre_opti
 import arbre_blocks
+import re
 
-#fonction qui attribue un departureGate à chaque noeud, nécessaire car departure gate d'un block c'est le début du suivant en raison du split selon jmp...
-def ajouteur_de_departureGate(listeBlocks):
-    for i in range(len(listeBlocks)-1):
-        destiny = listeBlocks[i+1].contenu.split("\n") #obtention contenu splitté selon lignes
-        listeBlocks[i].destinationgate = destiny[0] #destinationgate du block i devient première ligne du block i+1
-        
-#fonction qui prend la liste des blocks, la parcours et détermine et attribue les fils de chaque noeud
-def ajouteur_de_fils(listeBlocks):
-    for i in listeBlocks:
-        for j in listeBlocks:
-            for y in j.arrivalgates:
-                if i.destinationgate :
-                    print('----------------------', i.destinationgate, '--------------------------', y)
-                    if i.destinationgate[1:] in y :
-                        print('#############################')               
-    return None
 
 def optimize(motif):
 
@@ -182,16 +165,21 @@ def optimize(motif):
     #liste des noeuds dans l'ordre pour reconstruction syntaxique
     listeblocks = []
 
-    RacineBlock = arbre_blocks.noeud_block(-1)
+    #RacineBlock = arbre_blocks.noeud_block(-1)
 
     (initialisation, Lparse) = create_arbre(motif, listeblocks)
-
+    
+    
     for i in range(len(listeblocks)):
         print("---------------------")
-        print(listeblocks[i].contenu)
-
-
-    '''
+        #print("---------------------")
+        #print(listeblocks[i].arrivalgate)
+        #print(listeblocks[i].destinationgate)
+        #print("---------------------")
+        print(listeblocks[i].fils)
+        
+        
+        '''    
     
     #rajout des noeuds à la liste et création
     for i in range(len(liste)):
@@ -249,6 +237,41 @@ def create_arbre(motif, liste_blocks):
             block.contenu = result[i]
             liste_blocks.append(block)
             j += 1
-    print(result)
-    print(len(liste_blocks))
+    
+        #rajout des departureGate au noeuds
+    ajouteur_de_arrivalGate(liste_blocks)
+    
+    #rajout des departureGate au noeuds
+    ajouteur_de_departureGate(liste_blocks)
+    
+    ajouteur_de_fils(liste_blocks)    
+    
     return(initialisation, result)
+    
+
+#fonction qui attribue un arribalGate à chaque noeud, nécessaire car arrival gate d'un block c'est la fin du précedent en raison du split selon jmp...
+def ajouteur_de_arrivalGate(listeBlocks):
+    for i in range(1,len(listeBlocks)-1):
+        arrivee = listeBlocks[i-1].contenu.split("\n") #obtention contenu splitté selon lignes
+        if ":" in arrivee[-1]:
+            listeBlocks[i].arrivalgate = arrivee[-1] #destinationgate du block i devient première ligne du block i+1
+        
+#fonction qui attribue un departureGate à chaque noeud, nécessaire car departure gate d'un block c'est le début du suivant si il y a jmp a la fin du en-cours en raison du split selon jmp...
+def ajouteur_de_departureGate(listeBlocks):
+    for i in range(len(listeBlocks)-1):
+        encours = listeBlocks[i].contenu.split("\n")
+        if 'jmp' in encours[-1]:
+            destiny = listeBlocks[i+1].contenu.split("\n") #obtention contenu splitté selon lignes            
+            listeBlocks[i].destinationgate = destiny[0] #destinationgate du block i devient première ligne du block i+1
+        
+#fonction qui prend la liste des blocks, la parcours et détermine et attribue les fils de chaque noeud
+def ajouteur_de_fils(listeBlocks):
+    for i in listeBlocks:
+        for j in listeBlocks:
+            if i.destinationgate :
+                if j.arrivalgate:
+                    #print('----------------------', i.destinationgate[1:], '--------------------------', j.arrivalgate[0:-1])
+                    if re.search('^'+ i.destinationgate[1:] +'$', j.arrivalgate[0:-1]) :
+                        #print('#############################')
+                        i.fils.append(j)
+    return None

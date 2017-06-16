@@ -54,21 +54,21 @@ state 0
     (0) S' -> . programme
     (1) programme -> . MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO
 
-    MAIN            shift and go to state 1
+    MAIN            shift and go to state 2
 
-    programme                      shift and go to state 2
+    programme                      shift and go to state 1
 
 state 1
 
-    (1) programme -> MAIN . LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO
+    (0) S' -> programme .
 
-    LPAREN          shift and go to state 3
 
 
 state 2
 
-    (0) S' -> programme .
+    (1) programme -> MAIN . LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO
 
+    LPAREN          shift and go to state 3
 
 
 state 3
@@ -128,148 +128,148 @@ state 9
     (6) commande -> . commande END commande
     (7) commande -> . WHILE LPAREN expression RPAREN LACO commande RACO
 
-    ID              shift and go to state 12
-    WHILE           shift and go to state 11
+    ID              shift and go to state 11
+    WHILE           shift and go to state 10
 
-    commande                       shift and go to state 10
+    commande                       shift and go to state 12
 
 state 10
 
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande . FINISH PRINT LPAREN expression RPAREN RACO
-    (6) commande -> commande . END commande
+    (7) commande -> WHILE . LPAREN expression RPAREN LACO commande RACO
 
-    FINISH          shift and go to state 14
-    END             shift and go to state 13
+    LPAREN          shift and go to state 13
 
 
 state 11
 
-    (7) commande -> WHILE . LPAREN expression RPAREN LACO commande RACO
+    (5) commande -> ID . AFFECT expression
 
-    LPAREN          shift and go to state 15
+    AFFECT          shift and go to state 14
 
 
 state 12
 
-    (5) commande -> ID . AFFECT expression
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande . FINISH PRINT LPAREN expression RPAREN RACO
+    (6) commande -> commande . END commande
 
-    AFFECT          shift and go to state 16
+    FINISH          shift and go to state 16
+    END             shift and go to state 15
 
 
 state 13
-
-    (6) commande -> commande END . commande
-    (5) commande -> . ID AFFECT expression
-    (6) commande -> . commande END commande
-    (7) commande -> . WHILE LPAREN expression RPAREN LACO commande RACO
-
-    ID              shift and go to state 12
-    WHILE           shift and go to state 11
-
-    commande                       shift and go to state 17
-
-state 14
-
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH . PRINT LPAREN expression RPAREN RACO
-
-    PRINT           shift and go to state 18
-
-
-state 15
 
     (7) commande -> WHILE LPAREN . expression RPAREN LACO commande RACO
     (8) expression -> . NUMBER
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 20
-    ID              shift and go to state 21
+    NUMBER          shift and go to state 17
+    ID              shift and go to state 19
 
-    expression                     shift and go to state 19
+    expression                     shift and go to state 18
 
-state 16
+state 14
 
     (5) commande -> ID AFFECT . expression
     (8) expression -> . NUMBER
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 20
-    ID              shift and go to state 21
+    NUMBER          shift and go to state 17
+    ID              shift and go to state 19
 
-    expression                     shift and go to state 22
+    expression                     shift and go to state 20
+
+state 15
+
+    (6) commande -> commande END . commande
+    (5) commande -> . ID AFFECT expression
+    (6) commande -> . commande END commande
+    (7) commande -> . WHILE LPAREN expression RPAREN LACO commande RACO
+
+    ID              shift and go to state 11
+    WHILE           shift and go to state 10
+
+    commande                       shift and go to state 21
+
+state 16
+
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH . PRINT LPAREN expression RPAREN RACO
+
+    PRINT           shift and go to state 22
+
 
 state 17
 
-    (6) commande -> commande END commande .
-    (6) commande -> commande . END commande
-
-  ! shift/reduce conflict for END resolved as shift
-    RACO            reduce using rule 6 (commande -> commande END commande .)
-    FINISH          reduce using rule 6 (commande -> commande END commande .)
-    END             shift and go to state 13
-
-  ! END             [ reduce using rule 6 (commande -> commande END commande .) ]
-
-
-state 18
-
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT . LPAREN expression RPAREN RACO
-
-    LPAREN          shift and go to state 23
-
-
-state 19
-
-    (7) commande -> WHILE LPAREN expression . RPAREN LACO commande RACO
-    (10) expression -> expression . OPBIN expression
-
-    RPAREN          shift and go to state 24
-    OPBIN           shift and go to state 25
-
-
-state 20
-
     (8) expression -> NUMBER .
 
-    OPBIN           reduce using rule 8 (expression -> NUMBER .)
     RPAREN          reduce using rule 8 (expression -> NUMBER .)
+    OPBIN           reduce using rule 8 (expression -> NUMBER .)
     FINISH          reduce using rule 8 (expression -> NUMBER .)
     END             reduce using rule 8 (expression -> NUMBER .)
     RACO            reduce using rule 8 (expression -> NUMBER .)
 
 
-state 21
+state 18
+
+    (7) commande -> WHILE LPAREN expression . RPAREN LACO commande RACO
+    (10) expression -> expression . OPBIN expression
+
+    RPAREN          shift and go to state 24
+    OPBIN           shift and go to state 23
+
+
+state 19
 
     (9) expression -> ID .
 
-    OPBIN           reduce using rule 9 (expression -> ID .)
     RPAREN          reduce using rule 9 (expression -> ID .)
+    OPBIN           reduce using rule 9 (expression -> ID .)
     FINISH          reduce using rule 9 (expression -> ID .)
     END             reduce using rule 9 (expression -> ID .)
     RACO            reduce using rule 9 (expression -> ID .)
 
 
-state 22
+state 20
 
     (5) commande -> ID AFFECT expression .
     (10) expression -> expression . OPBIN expression
 
-    RACO            reduce using rule 5 (commande -> ID AFFECT expression .)
-    END             reduce using rule 5 (commande -> ID AFFECT expression .)
     FINISH          reduce using rule 5 (commande -> ID AFFECT expression .)
-    OPBIN           shift and go to state 25
+    END             reduce using rule 5 (commande -> ID AFFECT expression .)
+    RACO            reduce using rule 5 (commande -> ID AFFECT expression .)
+    OPBIN           shift and go to state 23
+
+
+state 21
+
+    (6) commande -> commande END commande .
+    (6) commande -> commande . END commande
+
+  ! shift/reduce conflict for END resolved as shift
+    FINISH          reduce using rule 6 (commande -> commande END commande .)
+    RACO            reduce using rule 6 (commande -> commande END commande .)
+    END             shift and go to state 15
+
+  ! END             [ reduce using rule 6 (commande -> commande END commande .) ]
+
+
+state 22
+
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT . LPAREN expression RPAREN RACO
+
+    LPAREN          shift and go to state 25
 
 
 state 23
 
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN . expression RPAREN RACO
+    (10) expression -> expression OPBIN . expression
     (8) expression -> . NUMBER
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 20
-    ID              shift and go to state 21
+    NUMBER          shift and go to state 17
+    ID              shift and go to state 19
 
     expression                     shift and go to state 26
 
@@ -282,38 +282,17 @@ state 24
 
 state 25
 
-    (10) expression -> expression OPBIN . expression
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN . expression RPAREN RACO
     (8) expression -> . NUMBER
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 20
-    ID              shift and go to state 21
+    NUMBER          shift and go to state 17
+    ID              shift and go to state 19
 
     expression                     shift and go to state 28
 
 state 26
-
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression . RPAREN RACO
-    (10) expression -> expression . OPBIN expression
-
-    RPAREN          shift and go to state 29
-    OPBIN           shift and go to state 25
-
-
-state 27
-
-    (7) commande -> WHILE LPAREN expression RPAREN LACO . commande RACO
-    (5) commande -> . ID AFFECT expression
-    (6) commande -> . commande END commande
-    (7) commande -> . WHILE LPAREN expression RPAREN LACO commande RACO
-
-    ID              shift and go to state 12
-    WHILE           shift and go to state 11
-
-    commande                       shift and go to state 30
-
-state 28
 
     (10) expression -> expression OPBIN expression .
     (10) expression -> expression . OPBIN expression
@@ -323,44 +302,65 @@ state 28
     FINISH          reduce using rule 10 (expression -> expression OPBIN expression .)
     END             reduce using rule 10 (expression -> expression OPBIN expression .)
     RACO            reduce using rule 10 (expression -> expression OPBIN expression .)
-    OPBIN           shift and go to state 25
+    OPBIN           shift and go to state 23
 
   ! OPBIN           [ reduce using rule 10 (expression -> expression OPBIN expression .) ]
 
 
+state 27
+
+    (7) commande -> WHILE LPAREN expression RPAREN LACO . commande RACO
+    (5) commande -> . ID AFFECT expression
+    (6) commande -> . commande END commande
+    (7) commande -> . WHILE LPAREN expression RPAREN LACO commande RACO
+
+    ID              shift and go to state 11
+    WHILE           shift and go to state 10
+
+    commande                       shift and go to state 29
+
+state 28
+
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression . RPAREN RACO
+    (10) expression -> expression . OPBIN expression
+
+    RPAREN          shift and go to state 30
+    OPBIN           shift and go to state 23
+
+
 state 29
-
-    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN . RACO
-
-    RACO            shift and go to state 31
-
-
-state 30
 
     (7) commande -> WHILE LPAREN expression RPAREN LACO commande . RACO
     (6) commande -> commande . END commande
 
+    RACO            shift and go to state 31
+    END             shift and go to state 15
+
+
+state 30
+
+    (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN . RACO
+
     RACO            shift and go to state 32
-    END             shift and go to state 13
 
 
 state 31
+
+    (7) commande -> WHILE LPAREN expression RPAREN LACO commande RACO .
+
+    FINISH          reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
+    END             reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
+    RACO            reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
+
+
+state 32
 
     (1) programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO .
 
     $end            reduce using rule 1 (programme -> MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO .)
 
-
-state 32
-
-    (7) commande -> WHILE LPAREN expression RPAREN LACO commande RACO .
-
-    RACO            reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
-    END             reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
-    FINISH          reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
-
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
-WARNING: shift/reduce conflict for END in state 17 resolved as shift
-WARNING: shift/reduce conflict for OPBIN in state 28 resolved as shift
+WARNING: shift/reduce conflict for END in state 21 resolved as shift
+WARNING: shift/reduce conflict for OPBIN in state 26 resolved as shift

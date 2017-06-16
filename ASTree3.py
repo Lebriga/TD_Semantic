@@ -176,35 +176,33 @@ def optimize(motif):
         #print(listeblocks[i].arrivalgate)
         #print(listeblocks[i].destinationgate)
         #print("---------------------")
-        print(listeblocks[i].fils)
+        print(listeblocks[i].contenu)
+    
+    #traitent de chaque contenu de chaque block    
+    traiter_arbre(listeblocks)
+    
+    print('-------------------------------------------')
+    print('-------------------------------------------')
+    print('-------------------------------------------')
+    
+    for i in range(len(listeblocks)):
+        print("---------------------")
+        #print("---------------------")
+        #print(listeblocks[i].arrivalgate)
+        #print(listeblocks[i].destinationgate)
+        #print("---------------------")
+        print(listeblocks[i].contenu)
         
-        
-        '''    
+    #reassemblage final
+    testlist = []
+    for x in listeblocks:
+        testlist.append(x.contenu)
     
-    #rajout des noeuds à la liste et création
-    for i in range(len(liste)):
-        newnode = arbre_blocks.noeud_block(i) 
-        newnode.contenu = liste[i] #on rajoute le texte du block dans le noeud
-        newnode.determine_arrivalgates()  #on détermine les arrivalgates du noeud et on les stock
-        listeblocks.append(newnode) #on rajoute le block à la liste des blocks'''
-
-    '''   
-    #rajout des departureGate au noeuds
-    ajouteur_de_departureGate(listeblocks)
+    return "\n".join(testlist)
     
-    #rajout des fils au noeuds
-    ajouteur_de_fils(listeblocks)
-    
-    #reconstruction syntaxique à partir d'arbre
-    result = []
-    for j in range(len(listeblocks)):
-        #print('------', listeblocks[j].id, '------', listeblocks[j].destinationgate, '--------', listeblocks[j].arrivalgates)
-        result.append(listeblocks[j].contenu)
-
-    #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join(result)'''
-
-    return ('Bonjour')
+def traiter_arbre(liste_blocks):
+    for i in liste_blocks:
+        i.traitement()
 
 def create_arbre(motif, liste_blocks):
     #Sépare la phase d'initialisation du corps du programme :

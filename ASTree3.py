@@ -12,7 +12,7 @@ m = search(r'(\s)+:', line)
 if m:
     m.groupe(1)'''
     
-
+import arbre_blocks
 class AST:
     
     idWhile = 0
@@ -121,6 +121,9 @@ pop eax
         return motif
             
     def p_toASM(self):
+
+
+        print('Je suis dans le bon ASTree')
         ## Ouverture Lecture
         f = open("motif.asm")
         motif = f.read()
@@ -139,8 +142,8 @@ pop eax
         motif = motif.replace("EVAL_OUTPUT", self.sons[2].e_toASM())
         
         #optimization
-        motif = optimize(motif)        
-        
+        motif = optimize(motif)
+
         g = open("motifrempli.asm", "w")
         g.write(motif)
 
@@ -170,20 +173,32 @@ def ajouteur_de_fils(listeBlocks):
     return None
 
 def optimize(motif):
+
+    '''A supprimer!
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = motif.split("jmp")
+    '''
+
     #liste des noeuds dans l'ordre pour reconstruction syntaxique
     listeblocks = []
 
     RacineBlock = arbre_blocks.noeud_block(-1)
+
+    (initialisation, Lparse) = create_arbre(motif, listeblocks)
+
+    print(Lparse)
+
+
+    '''
     
     #rajout des noeuds à la liste et création
     for i in range(len(liste)):
         newnode = arbre_blocks.noeud_block(i) 
         newnode.contenu = liste[i] #on rajoute le texte du block dans le noeud
         newnode.determine_arrivalgates()  #on détermine les arrivalgates du noeud et on les stock
-        listeblocks.append(newnode) #on rajoute le block à la liste des blocks
-        
+        listeblocks.append(newnode) #on rajoute le block à la liste des blocks'''
+
+    '''   
     #rajout des departureGate au noeuds
     ajouteur_de_departureGate(listeblocks)
     
@@ -197,4 +212,41 @@ def optimize(motif):
         result.append(listeblocks[j].contenu)
 
     #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join(result)    
+    return "jmp".join(result)'''
+
+    return ('Bonjour')
+
+def create_arbre(motif, liste_blocks):
+    #Sépare la phase d'initialisation du corps du programme :
+    A = motif.split('main:')
+    if len(A)>1:
+        initialisation = A[0] + 'main:'
+    else :
+        print('Error : Absence de "main:')
+    #Parse motif en séparant les ":" et les "jmp"
+    L = A[1].split('jmp')
+    Lclefs = []
+    result = []
+    for i in range(len(L) - 1):
+        Lclefs.append(L[i])
+        Lclefs.append('jmp')
+    Lclefs.append(L[-1])
+
+    for i in Lclefs:
+        l = i.split(':')
+        for j in range(len(l) - 1):
+            result.append(l[j])
+            result.append(':')
+        result.append(l[-1])
+    j = 0
+
+    #Crée les noeuds correspondant aux blocs
+    for i in range (len(result)):
+        if result[i] != 'jmp' and result[i] != ':':
+            block = arbre_blocks.noeud_block(j)
+            block.contenu = result[i]
+            liste_blocks.append(block)
+            j += 1
+    print(result)
+    print(len(liste_blocks))
+    return(initialisation, result)

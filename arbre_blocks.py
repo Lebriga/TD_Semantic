@@ -10,7 +10,7 @@ class noeud_block:
     
     def __init__(self, _id):
         self.arbreopti = None
-        self.arrivalgates = []
+        self.arrivalgate = None
         self.contenu = None
         self.destinationgate = None
         self.id = _id
@@ -30,18 +30,18 @@ class noeud_block:
                 result.append(i.print_arbre())     
         return result
         
-    #deffinition des arrivalgates :
-    def determine_arrivalgates(self):     
+    '''#deffinition du arrivalgate :
+    def determine_arrivalgate(self):     
         liste = self.contenu.split("\n")
         result = []
         for i in range(len(liste)):
             if ":" in liste[i]:
-                result.append(liste[i])
-        self.arrivalgates = result
+                self.arrivalgates = liste[i]'''
+
             
         
     #recherche le noeud contenant l'addresse destination du jump
-    def recherche_parArrivalGate(self, string):
+    '''def recherche_parArrivalGate(self, string):
         result = []
         for i in range(len(self.arrivalgates)):
             if string in self.arrivalgates[i]:
@@ -51,4 +51,4 @@ class noeud_block:
                 result.extend(self.fils[i].recherche_parArrivalGate(string))
         for x in result :
             print('#########################' + x.nomJ + '######################')
-        return result
+        return result'''

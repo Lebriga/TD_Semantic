@@ -152,23 +152,6 @@ pop eax
 import arbre_opti
 import arbre_blocks
 
-#fonction qui attribue un departureGate à chaque noeud, nécessaire car departure gate d'un block c'est le début du suivant en raison du split selon jmp...
-def ajouteur_de_departureGate(listeBlocks):
-    for i in range(len(listeBlocks)-1):
-        destiny = listeBlocks[i+1].contenu.split("\n") #obtention contenu splitté selon lignes
-        listeBlocks[i].destinationgate = destiny[0] #destinationgate du block i devient première ligne du block i+1
-        
-#fonction qui prend la liste des blocks, la parcours et détermine et attribue les fils de chaque noeud
-def ajouteur_de_fils(listeBlocks):
-    for i in listeBlocks:
-        for j in listeBlocks:
-            for y in j.arrivalgates:
-                if i.destinationgate :
-                    print('----------------------', i.destinationgate, '--------------------------', y)
-                    if i.destinationgate[1:] in y :
-                        print('#############################')                        
-    return None
-
 def optimize(motif):
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = re.split(":", motif)

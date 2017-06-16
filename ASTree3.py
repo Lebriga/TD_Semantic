@@ -186,7 +186,9 @@ def optimize(motif):
 
     (initialisation, Lparse) = create_arbre(motif, listeblocks)
 
-    print(Lparse)
+    for i in range(len(listeblocks)):
+        print("---------------------")
+        print(listeblocks[i].contenu)
 
 
     '''

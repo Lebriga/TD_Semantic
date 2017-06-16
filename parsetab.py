@@ -5,9 +5,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'programmeNUMBER ID OPBIN LPAREN RPAREN LACO RACO END AFFECT COMMA FINISH WHILE MAIN IF PRINT RETURNprogramme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO\n    enum : ID\n              | ID COMMA enum\n    empty :commande : ID AFFECT expression\n                  | commande END commande\n                  | WHILE LPAREN expression RPAREN LACO commande RACOexpression :  NUMBER\n                    | ID\n                    | expression OPBIN expression'
+_lr_signature = 'programmeNUMBER ID OPBIN LPAREN RPAREN LACO RACO END AFFECT COMMA FINISH WHILE IF RETURN PRINT MAINprogramme : MAIN LPAREN enum RPAREN LACO commande FINISH PRINT LPAREN expression RPAREN RACO\n    enum : ID\n              | ID COMMA enum\n    empty :commande : ID AFFECT expression\n                  | commande END commande\n                  | WHILE LPAREN expression RPAREN LACO commande RACOexpression :  NUMBER\n                    | ID\n                    | expression OPBIN expression'
     
-_lr_action_items = {'WHILE':([8,14,27,],[11,11,11,]),'COMMA':([5,],[7,]),'LPAREN':([2,11,17,],[3,15,23,]),'END':([10,18,19,21,22,28,30,32,],[14,14,-8,-9,-5,-10,14,-7,]),'$end':([1,31,],[0,-1,]),'RACO':([18,19,21,22,28,29,30,32,],[-6,-8,-9,-5,-10,31,32,-7,]),'ID':([3,7,8,14,15,16,23,25,27,],[5,5,12,12,21,21,21,21,12,]),'MAIN':([0,],[2,]),'PRINT':([13,],[17,]),'FINISH':([10,18,19,21,22,28,32,],[13,-6,-8,-9,-5,-10,-7,]),'AFFECT':([12,],[16,]),'LACO':([6,24,],[8,27,]),'NUMBER':([15,16,23,25,],[19,19,19,19,]),'RPAREN':([4,5,9,19,20,21,26,28,],[6,-2,-3,-8,24,-9,29,-10,]),'OPBIN':([19,20,21,22,26,28,],[-8,25,-9,25,25,25,]),}
+_lr_action_items = {'LPAREN':([1,11,18,],[3,15,23,]),'AFFECT':([12,],[16,]),'NUMBER':([15,16,23,25,],[20,20,20,20,]),'END':([10,17,20,21,22,28,30,32,],[13,13,-8,-9,-5,-10,13,-7,]),'$end':([2,31,],[0,-1,]),'MAIN':([0,],[1,]),'PRINT':([14,],[18,]),'COMMA':([4,],[6,]),'FINISH':([10,17,20,21,22,28,32,],[14,-6,-8,-9,-5,-10,-7,]),'WHILE':([9,13,27,],[11,11,11,]),'ID':([3,6,9,13,15,16,23,25,27,],[4,4,12,12,21,21,21,21,12,]),'RPAREN':([4,5,8,19,20,21,26,28,],[-2,7,-3,24,-8,-9,29,-10,]),'RACO':([17,20,21,22,28,29,30,32,],[-6,-8,-9,-5,-10,31,32,-7,]),'LACO':([7,24,],[9,27,]),'OPBIN':([19,20,21,22,26,28,],[25,-8,-9,25,25,25,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'programme':([0,],[1,]),'expression':([15,16,23,25,],[20,22,26,28,]),'enum':([3,7,],[4,9,]),'commande':([8,14,27,],[10,18,30,]),}
+_lr_goto_items = {'commande':([9,13,27,],[10,17,30,]),'expression':([15,16,23,25,],[19,22,26,28,]),'enum':([3,6,],[5,8,]),'programme':([0,],[2,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():

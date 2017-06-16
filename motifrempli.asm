@@ -12,23 +12,18 @@ add esp, 4
 
 pop eax
 
-jmp
- debut_prog
+jmp debut_prog
 erreur_nb_entree:
-
 mov eax, 1
 push eax
 lea eax, [message_erreur]
 push eax
 call printf
 add esp, 8
-jmp
- fin
+jmp fin
 
 debut_prog:
-
 debutboucle1:
-
 mov eax, [X]
 
 cmp eax, 0
@@ -47,10 +42,8 @@ pop ebx
 sub eax, ebx
 
 
-jmp
- debutboucle1
+jmp debutboucle1
 finboucle1:
-
 
 
 
@@ -65,6 +58,5 @@ push eax
 call printf
 add esp, 8
 
-fin:
- ret
+fin: ret
 

@@ -182,10 +182,10 @@ state 15
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 19
+    NUMBER          shift and go to state 21
     ID              shift and go to state 20
 
-    expression                     shift and go to state 21
+    expression                     shift and go to state 19
 
 state 16
 
@@ -194,7 +194,7 @@ state 16
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 19
+    NUMBER          shift and go to state 21
     ID              shift and go to state 20
 
     expression                     shift and go to state 22
@@ -212,8 +212,8 @@ state 18
     (6) commande -> commande . END commande
 
   ! shift/reduce conflict for END resolved as shift
-    RACO            reduce using rule 6 (commande -> commande END commande .)
     FINISH          reduce using rule 6 (commande -> commande END commande .)
+    RACO            reduce using rule 6 (commande -> commande END commande .)
     END             shift and go to state 14
 
   ! END             [ reduce using rule 6 (commande -> commande END commande .) ]
@@ -221,13 +221,11 @@ state 18
 
 state 19
 
-    (8) expression -> NUMBER .
+    (7) commande -> WHILE LPAREN expression . RPAREN LACO commande RACO
+    (10) expression -> expression . OPBIN expression
 
-    RPAREN          reduce using rule 8 (expression -> NUMBER .)
-    OPBIN           reduce using rule 8 (expression -> NUMBER .)
-    FINISH          reduce using rule 8 (expression -> NUMBER .)
-    END             reduce using rule 8 (expression -> NUMBER .)
-    RACO            reduce using rule 8 (expression -> NUMBER .)
+    RPAREN          shift and go to state 24
+    OPBIN           shift and go to state 25
 
 
 state 20
@@ -243,11 +241,13 @@ state 20
 
 state 21
 
-    (7) commande -> WHILE LPAREN expression . RPAREN LACO commande RACO
-    (10) expression -> expression . OPBIN expression
+    (8) expression -> NUMBER .
 
-    RPAREN          shift and go to state 25
-    OPBIN           shift and go to state 24
+    RPAREN          reduce using rule 8 (expression -> NUMBER .)
+    OPBIN           reduce using rule 8 (expression -> NUMBER .)
+    FINISH          reduce using rule 8 (expression -> NUMBER .)
+    END             reduce using rule 8 (expression -> NUMBER .)
+    RACO            reduce using rule 8 (expression -> NUMBER .)
 
 
 state 22
@@ -255,10 +255,10 @@ state 22
     (5) commande -> ID AFFECT expression .
     (10) expression -> expression . OPBIN expression
 
-    RACO            reduce using rule 5 (commande -> ID AFFECT expression .)
     END             reduce using rule 5 (commande -> ID AFFECT expression .)
     FINISH          reduce using rule 5 (commande -> ID AFFECT expression .)
-    OPBIN           shift and go to state 24
+    RACO            reduce using rule 5 (commande -> ID AFFECT expression .)
+    OPBIN           shift and go to state 25
 
 
 state 23
@@ -268,29 +268,29 @@ state 23
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 19
+    NUMBER          shift and go to state 21
     ID              shift and go to state 20
 
     expression                     shift and go to state 26
 
 state 24
 
+    (7) commande -> WHILE LPAREN expression RPAREN . LACO commande RACO
+
+    LACO            shift and go to state 27
+
+
+state 25
+
     (10) expression -> expression OPBIN . expression
     (8) expression -> . NUMBER
     (9) expression -> . ID
     (10) expression -> . expression OPBIN expression
 
-    NUMBER          shift and go to state 19
+    NUMBER          shift and go to state 21
     ID              shift and go to state 20
 
-    expression                     shift and go to state 27
-
-state 25
-
-    (7) commande -> WHILE LPAREN expression RPAREN . LACO commande RACO
-
-    LACO            shift and go to state 28
-
+    expression                     shift and go to state 28
 
 state 26
 
@@ -298,25 +298,10 @@ state 26
     (10) expression -> expression . OPBIN expression
 
     RPAREN          shift and go to state 29
-    OPBIN           shift and go to state 24
+    OPBIN           shift and go to state 25
 
 
 state 27
-
-    (10) expression -> expression OPBIN expression .
-    (10) expression -> expression . OPBIN expression
-
-  ! shift/reduce conflict for OPBIN resolved as shift
-    RPAREN          reduce using rule 10 (expression -> expression OPBIN expression .)
-    FINISH          reduce using rule 10 (expression -> expression OPBIN expression .)
-    END             reduce using rule 10 (expression -> expression OPBIN expression .)
-    RACO            reduce using rule 10 (expression -> expression OPBIN expression .)
-    OPBIN           shift and go to state 24
-
-  ! OPBIN           [ reduce using rule 10 (expression -> expression OPBIN expression .) ]
-
-
-state 28
 
     (7) commande -> WHILE LPAREN expression RPAREN LACO . commande RACO
     (5) commande -> . ID AFFECT expression
@@ -327,6 +312,21 @@ state 28
     WHILE           shift and go to state 11
 
     commande                       shift and go to state 30
+
+state 28
+
+    (10) expression -> expression OPBIN expression .
+    (10) expression -> expression . OPBIN expression
+
+  ! shift/reduce conflict for OPBIN resolved as shift
+    RPAREN          reduce using rule 10 (expression -> expression OPBIN expression .)
+    FINISH          reduce using rule 10 (expression -> expression OPBIN expression .)
+    END             reduce using rule 10 (expression -> expression OPBIN expression .)
+    RACO            reduce using rule 10 (expression -> expression OPBIN expression .)
+    OPBIN           shift and go to state 25
+
+  ! OPBIN           [ reduce using rule 10 (expression -> expression OPBIN expression .) ]
+
 
 state 29
 
@@ -355,12 +355,12 @@ state 32
 
     (7) commande -> WHILE LPAREN expression RPAREN LACO commande RACO .
 
-    RACO            reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
     END             reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
     FINISH          reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
+    RACO            reduce using rule 7 (commande -> WHILE LPAREN expression RPAREN LACO commande RACO .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for END in state 18 resolved as shift
-WARNING: shift/reduce conflict for OPBIN in state 27 resolved as shift
+WARNING: shift/reduce conflict for OPBIN in state 28 resolved as shift

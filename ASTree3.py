@@ -194,11 +194,11 @@ def optimize(motif):
         print(listeblocks[i].contenu)'''
         
     #reassemblage final
-    testlist = []
+    result = ""
     for x in listeblocks:
-        testlist.append(x.contenu)
+        result += x.contenu
     
-    return "\n".join(testlist)
+    return result
     
 def traiter_arbre(liste_blocks):
     for i in liste_blocks:

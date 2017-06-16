@@ -153,7 +153,7 @@ def optimize(motif):
         liste[i] = traitement(liste[i])
     
     #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join(liste)
+    return "jmp".join("")
 
 
 def traitement(string):

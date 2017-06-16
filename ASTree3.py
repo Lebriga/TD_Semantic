@@ -230,14 +230,14 @@ def create_arbre(motif, liste_blocks):
     Lclefs = []
     result = []
     for i in range(len(L) - 1):
-        Lclefs.append(L[i])
+        Lclefs.append(L[i]+'jmp')
         Lclefs.append('jmp')
     Lclefs.append(L[-1])
 
     for i in Lclefs:
         l = i.split(':')
         for j in range(len(l) - 1):
-            result.append(l[j])
+            result.append(l[j] + ':')
             result.append(':')
         result.append(l[-1])
     j = 0

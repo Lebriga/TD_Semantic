@@ -2,10 +2,15 @@
 """
 Created on Wed May 17 08:11:17 2017
 
-@author: François
+@author: petrucusnir
 
 
 """
+'''
+import re
+m = search(r'(\s)+:', line)
+if m:
+    m.groupe(1)'''
 class AST:
     
     idWhile = 0
@@ -114,6 +119,9 @@ pop eax
         return motif
             
     def p_toASM(self):
+
+
+        print('Je suis dans le bon ASTree')
         ## Ouverture Lecture
         f = open("motif.asm")
         motif = f.read()
@@ -132,8 +140,8 @@ pop eax
         motif = motif.replace("EVAL_OUTPUT", self.sons[2].e_toASM())
         
         #optimization
-        motif = optimize(motif)        
-        
+        motif = optimize(motif)
+
         g = open("motifrempli.asm", "w")
         g.write(motif)
 
@@ -142,128 +150,129 @@ pop eax
  ####################################
  ###################################
  ###################################
-import arbre_opti
+import arbre_blocks
+import re
+
 
 def optimize(motif):
+
+    '''A supprimer!
     #Premiere ligne sert à splitter en fonciton de jump le string en liste de strings
     liste = motif.split("jmp")
+    '''
+
+    #liste des noeuds dans l'ordre pour reconstruction syntaxique
+    listeblocks = []
+
+    #RacineBlock = arbre_blocks.noeud_block(-1)
+
+    (initialisation, Lparse) = create_arbre(motif, listeblocks)
     
-    #application de la fonction traitment à chaque block
-    for i in range(len(liste)):
-        liste[i] = traitement(liste[i])
     
-    #Ne pas enlever cette ligne à la fin de la fonction
-    return "jmp".join("")
-
-
-def traitement(string):
-    #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
-    liste = string.split("\n")
-    #en plus de faire partie de l'arbre tous les noeuds representants une opération mov dans un registre seront rangés dans cette liste afin d'êtres parcourus à la fin pour s'assurer qu'ils ont en fils push, cmp, ou add, le cas contraire ils seront supprimés
-    liste_noeuds = []
-    #creation premier noeud de l'arbre du bloc
-    racine = arbre_opti.noeud_opt('valeur', -1)
-    #######################################
-    #parcours du bloc et création de l'arbre
-    for i in range(len(liste)):
-        print("-------------------------")
-        print(i)
-        ligne = reconnait(liste[i])
-        print(ligne)
-        if ligne[0][0] == 'mov':
-            # crée le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
-            noeud = arbre_opti.noeud_opt(ligne[0][1], i)
-            # ajoute en tant que fils le noeud créé auparavant au dernier noeud de l'arbre représentant le registre ligne[1]
-            recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
-            # ajoute le noeud à la liste des noeuds
-            liste_noeuds.append(noeud)
-        #si push on rajoute un noeud push en fils de noeud pushé mais on NE rajoute PAS le noeud push à liste_noeud (liste des registres)
-        elif ligne[0][0] == 'push':
-            noeud = arbre_opti.noeud_opt('push', i)
-            recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
-        #idem mais pour cmp et il  a cette fois deux fils
-        elif ligne[0][0] == 'cmp':
-            noeud = arbre_opti.noeud_opt('cmp', i)
-            recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
-            recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
-        #idem pour add mais il faut distinguer les add dans esp et les add dans un registre dans quel cas il faut qu'il soit push après
-        elif ligne[0][0] == 'add':
-            if ligne[0][1] == 'esp':
-                noeud = arbre_opti.noeud_opt('add', i)
-                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
-            else:
-                noeud = arbre_opti.noeud_opt(ligne[0][1], i)
-                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
-                liste_noeuds.append(noeud)
-                
-                
-
-    print('---------------------------------------------------')
-    print ('Arbre avant suppressions')
-    print(racine.print_arbre())
-    for n in liste_noeuds:
-        print(n.nom + '_'+str(n.ligne_script))
-    #######################
-    #suppression des lignes
-    #######################
-    i = len(liste_noeuds) - 1
-    while i>-1:
-        l = liste_noeuds[i].fils
-        print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
-        print(len(l))
-
-        supprimes = True
-        for j in range(len(l)):
-            if l[j].nom != 'suppressed':
-                supprimes = False
-        if supprimes:
-            print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
-            liste_noeuds[i].suppress()
-            liste[liste_noeuds[i].ligne_script] = ''
-        i = i - 1
-
-
-
-
-        print("-------------------------")
-        print("Arbre après suppression")
-        print(racine.print_arbre())
-        print("---------------------------------------------------------------------------")
+    #for i in range(len(listeblocks)):
+        #print("---------------------")
+        #print("---------------------")
+        #print(listeblocks[i].arrivalgate)
+        #print(listeblocks[i].destinationgate)
+        #print("---------------------")
+        #print(listeblocks[i].contenu)
     
-    print('------')
-    print('Suppressions terminées')
-    print('------')
+    #traitent de chaque contenu de chaque block    
+    traiter_arbre(listeblocks)
     
-    #Ne pas enlever cette ligne à la fin de la fonction
-    return "\n".join(liste)
-
-#separe phrase en [[1er terme, 2eme terme], valeur]
-def reconnait(string):
-    liste = string.split(",")
-    liste[0] = liste[0].split(" ")
-    #correction syntaxe : mov[x] := mov [x]
-    if 'mov' in liste[0][0] and len(liste[0][0]) > 3:
-        print('---------------------------------------------------Avant-----------------------------------------------------------------------------')
-        print(liste)       
-        liste[0].append(liste[0][0][3:])
-        liste[0][0] = liste[0][0][0:3]
-
-
-    #suppression espace valeur
-    if len(liste) > 1:
-        if liste[1][0] == " ":
-            liste[1] = liste[1][1:]
-    print('-----------------------------------------------------------------------------------------------------------------------------------------')
-    print(liste)
-    print('-----------------------------------------------------------------------------------------------------------------------------------------')
-    return liste
+    '''print('-------------------------------------------')
+    print('-------------------------------------------')
+    print('-------------------------------------------')
     
-def recherchenoeud(liste, nom, racine):
-    i = len(liste) -1
-    while i >= 0:
-        if liste[i].nom == nom:
-            return liste[i]
-        i -=1
-    return racine
+    for i in range(len(listeblocks)):
+        print("---------------------")
+        #print("---------------------")
+        #print(listeblocks[i].arrivalgate)
+        #print(listeblocks[i].destinationgate)
+        #print("---------------------")
+        print(listeblocks[i].contenu)'''
+        
+    #reassemblage final
+    result = ""
+    for x in listeblocks:
+        result += x.contenu
     
-###############################################################################
+    return result
+    
+def traiter_arbre(liste_blocks):
+    for i in liste_blocks:
+        i.traitement()
+    for i in liste_blocks:
+        i.proteger()
+    for i in liste_blocks:
+        i.suppresion()
+
+def create_arbre(motif, liste_blocks):
+    #Sépare la phase d'initialisation du corps du programme :
+    A = motif.split('main:')
+    if len(A)>1:
+        initialisation = A[0] + 'main:'
+    else :
+        print('Error : Absence de "main:')
+    #Parse motif en séparant les ":" et les "jmp"
+    L = A[1].split('jmp')
+    Lclefs = []
+    result = []
+    for i in range(len(L) - 1):
+        Lclefs.append(L[i]+'jmp')
+        Lclefs.append('jmp')
+    Lclefs.append(L[-1])
+
+    for i in Lclefs:
+        l = i.split(':')
+        for j in range(len(l) - 1):
+            result.append(l[j] + ':')
+            result.append(':')
+        result.append(l[-1])
+    j = 0
+
+    #Crée les noeuds correspondant aux blocs
+    for i in range (len(result)):
+        if result[i] != 'jmp' and result[i] != ':':
+            block = arbre_blocks.noeud_block(j)
+            block.contenu = result[i]
+            liste_blocks.append(block)
+            j += 1
+    
+        #rajout des departureGate au noeuds
+    ajouteur_de_arrivalGate(liste_blocks)
+    
+    #rajout des departureGate au noeuds
+    ajouteur_de_departureGate(liste_blocks)
+    
+    ajouteur_de_fils(liste_blocks)    
+    
+    return(initialisation, result)
+    
+
+#fonction qui attribue un arribalGate à chaque noeud, nécessaire car arrival gate d'un block c'est la fin du précedent en raison du split selon jmp...
+def ajouteur_de_arrivalGate(listeBlocks):
+    for i in range(1,len(listeBlocks)-1):
+        arrivee = listeBlocks[i-1].contenu.split("\n") #obtention contenu splitté selon lignes
+        if ":" in arrivee[-1]:
+            listeBlocks[i].arrivalgate = arrivee[-1] #destinationgate du block i devient première ligne du block i+1
+        
+#fonction qui attribue un departureGate à chaque noeud, nécessaire car departure gate d'un block c'est le début du suivant si il y a jmp a la fin du en-cours en raison du split selon jmp...
+def ajouteur_de_departureGate(listeBlocks):
+    for i in range(len(listeBlocks)-1):
+        encours = listeBlocks[i].contenu.split("\n")
+        if 'jmp' in encours[-1]:
+            destiny = listeBlocks[i+1].contenu.split("\n") #obtention contenu splitté selon lignes            
+            listeBlocks[i].destinationgate = destiny[0] #destinationgate du block i devient première ligne du block i+1
+        
+#fonction qui prend la liste des blocks, la parcours et détermine et attribue les fils de chaque noeud
+def ajouteur_de_fils(listeBlocks):
+    for i in listeBlocks:
+        for j in listeBlocks:
+            if i.destinationgate :
+                if j.arrivalgate:
+                    #print('----------------------', i.destinationgate[1:], '--------------------------', j.arrivalgate[0:-1])
+                    if re.search('^'+ i.destinationgate[1:] +'$', j.arrivalgate[0:-1]) :
+                        #print('#############################')
+                        i.fils.append(j)
+    return None

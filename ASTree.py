@@ -193,7 +193,7 @@ def optimize(motif):
         print(listeblocks[i].contenu)'''
         
     #reassemblage final
-    result = ""
+    result = initialisation
     for x in listeblocks:
         result += x.contenu
     

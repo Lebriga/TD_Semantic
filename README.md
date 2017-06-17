@@ -17,6 +17,9 @@ Pour finir **optimize** réassemble le contenu de chaque bloc en un seul string 
 <h2>Resultat</h2>
 
 Pour comparer notre rendu vous pouvez comparer "motifsrempli.asm" avec "motifsrempli_ancienneVesion.asm".
+
+Nous passons ainsi de 15 "mov" à 9.
+
 <h4>Nouvelle Version :</h4>
 <pre><code>
 global main 

@@ -5,11 +5,13 @@ Created on Wed Jun 14 10:18:29 2017
 @author: gabriel & petrucusnir
 """
 import arbre_opti
+import re
 
 class noeud_block: 
     
     
     def __init__(self, _id):
+        self.arbre = [] #en realite une liste des noeuds necessaire au traitement bloc par bloc car en plus de faire partie de l'arbre tous les noeuds representants une operation mov dans un registre seront ranges dans cette liste afin d'êtres parcourus à la fin pour s'assurer qu'ils ont en fils push, cmp, ou add, le cas contraire ils seront supprimes
         self.read = []
         self.wrote = []
         self.arrivalgate = None
@@ -33,56 +35,55 @@ class noeud_block:
         return result
 
 #######################################"
+    #creation de l'arbre d'optimisation pour le bloc meme 
     def traitement(self):
         #Premiere ligne sert à splitter en fonciton de \n le block en liste de strings
         liste = self.contenu.split("\n")
-        #en plus de faire partie de l'arbre tous les noeuds representants une opération mov dans un registre seront rangés dans cette liste afin d'êtres parcourus à la fin pour s'assurer qu'ils ont en fils push, cmp, ou add, le cas contraire ils seront supprimés
-        liste_noeuds = []
         #creation premier noeud de l'arbre du bloc
         racine = arbre_opti.noeud_opt('valeur', -1)
         #######################################
-        #parcours du bloc et création de l'arbre
+        #parcours du bloc et creation de l'arbre
         for i in range(len(liste)):
             ligne = reconnait(liste[i])
             if ligne[0][0] == 'mov':
-                # crée le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
+                # cree le nouveau noeud de nom : ligne[0][1]_i (nomregistre_numeroligne)
                 noeud = arbre_opti.noeud_opt(ligne[0][1], i)
-                # ajoute en tant que fils le noeud créé auparavant au dernier noeud de l'arbre représentant le registre ligne[1]
-                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+                # ajoute en tant que fils le noeud cree auparavant au dernier noeud de l'arbre representant le registre ligne[1]
+                recherchenoeud(self.arbre, ligne[1], racine).add_fils(noeud)
                 # ajoute le noeud à la liste des noeuds
-                liste_noeuds.append(noeud)
-            #si push on rajoute un noeud push en fils de noeud pushé mais on NE rajoute PAS le noeud push à liste_noeud (liste des registres)
+                self.arbre.append(noeud)
+            #si push on rajoute un noeud push en fils de noeud pushe mais on NE rajoute PAS le noeud push à liste_noeud (liste des registres)
             elif ligne[0][0] == 'push':
                 noeud = arbre_opti.noeud_opt('push', i)
-                recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
+                recherchenoeud(self.arbre, ligne[0][1], racine).add_fils(noeud)
             #idem mais pour cmp et il  a cette fois deux fils
             elif ligne[0][0] == 'cmp':
                 noeud = arbre_opti.noeud_opt('cmp', i)
-                recherchenoeud(liste_noeuds, ligne[0][1], racine).add_fils(noeud)
-                recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+                recherchenoeud(self.arbre, ligne[0][1], racine).add_fils(noeud)
+                recherchenoeud(self.arbre, ligne[1], racine).add_fils(noeud)
             #idem pour add mais il faut distinguer les add dans esp et les add dans un registre dans quel cas il faut qu'il soit push après
             elif ligne[0][0] == 'add':
                 if ligne[0][1] == 'esp':
                     noeud = arbre_opti.noeud_opt('add', i)
-                    recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
+                    recherchenoeud(self.arbre, ligne[1], racine).add_fils(noeud)
                 else:
                     noeud = arbre_opti.noeud_opt(ligne[0][1], i)
-                    recherchenoeud(liste_noeuds, ligne[1], racine).add_fils(noeud)
-                    liste_noeuds.append(noeud)
+                    recherchenoeud(self.arbre, ligne[1], racine).add_fils(noeud)
+                    self.arbre.append(noeud)
         
         #####################
-        #creation read/wrote pour trouver elements qui sont utilisés dans autres blocs
+        #creation read/wrote pour trouver elements qui sont utilises dans autres blocs
         #####################
 
-        #remplisache liste des wrote
-        y = len(liste_noeuds) - 1
+        #remplisage liste des wrote
+        y = len(self.arbre) - 1
         while y>-1:
             already_exists = False
             for m in self.wrote:
-                if liste_noeuds[y].nom == m.nom:
+                if self.arbre[y].nom == m.nom:
                     already_exists = True      
             if not already_exists:
-                self.wrote.append(liste_noeuds[y])
+                self.wrote.append(self.arbre[y])
             y = y - 1
         '''print('----------')
         for n in self.wrote:
@@ -106,8 +107,8 @@ class noeud_block:
                     liste_overwrote.append(writing.nom)
                 if not already_exists_or_overwrote:
                     self.read.append(ligne[1])
-                print(i)
-        print('__'.join(self.read))
+                '''print(i)
+        print('__'.join(self.read))'''
                 
                 
             
@@ -116,29 +117,30 @@ class noeud_block:
         '''print('---------------------------------------------------')
         print ('Arbre avant suppressions')
         print(racine.print_arbre())
-        for n in liste_noeuds:
+        for n in self.arbre:
             print(n.nom + '_'+str(n.ligne_script))'''
+    
+    #suppression des lignes considere innutiles du contenu du bloc        
+    def suppresion(self):
         #######################
         #suppression des lignes
         #######################
-        i = len(liste_noeuds) - 1
+        liste = self.contenu.split("\n")
+        i = len(self.arbre) - 1
         while i>-1:
-            l = liste_noeuds[i].fils
-            '''print(liste_noeuds[i].nom + '_' + str(liste_noeuds[i].ligne_script))
+            l = self.arbre[i].fils
+            '''print(self.arbre[i].nom + '_' + str(self.arbre[i].ligne_script))
             print(len(l))'''
     
             supprimes = True
             for j in range(len(l)):
-                if l[j].nom != 'suppressed':
+                if l[j].nom != 'suppressed' or l[j].protected:
                     supprimes = False
             if supprimes:
-                #print(liste_noeuds[i].nom +'_'+ str(liste_noeuds[i].ligne_script) + 'a été supprimé')
-                liste_noeuds[i].suppress()
-                liste[liste_noeuds[i].ligne_script] = ''
+                #print(self.arbre[i].nom +'_'+ str(self.arbre[i].ligne_script) + 'a ete supprime')
+                self.arbre[i].suppress()
+                liste[self.arbre[i].ligne_script] = ''
             i = i - 1
-    
-    
-    
     
             '''print("-------------------------")
             print("Arbre après suppression")
@@ -146,11 +148,24 @@ class noeud_block:
             print("---------------------------------------------------------------------------")
         
         print('------')
-        print('Suppressions terminées')
+        print('Suppressions terminees')
         print('------')'''
         
         #Ne pas enlever cette ligne à la fin de la fonction
         self.contenu = "\n".join(liste)
+    
+#Protection des noeuds qui sotn utilise dans autre partie du bloc    
+    def proteger(self):
+        for i in self.fils:
+            for j in self.wrote:
+                for k in self.read:
+                    if re.search(j.nom, k) :
+                        j.protected = True
+                        print('-------------------------')
+                        print(self.id)
+                        print(j.nom)
+                        print(j.ligne_script)
+                        print('--------------------------')
 
 #separe phrase en [[1er terme, 2eme terme], valeur]
 def reconnait(string):
@@ -180,27 +195,3 @@ def recherchenoeud(liste, nom, racine):
             return liste[i]
         i -=1
     return racine
-
-        
-    '''#deffinition du arrivalgate :
-    def determine_arrivalgate(self):     
-        liste = self.contenu.split("\n")
-        result = []
-        for i in range(len(liste)):
-            if ":" in liste[i]:
-                self.arrivalgates = liste[i]'''
-
-            
-        
-    #recherche le noeud contenant l'addresse destination du jump
-    '''def recherche_parArrivalGate(self, string):
-        result = []
-        for i in range(len(self.arrivalgates)):
-            if string in self.arrivalgates[i]:
-                result.append(self)
-        else :
-            for i in range(len(self.fils)):
-                result.extend(self.fils[i].recherche_parArrivalGate(string))
-        for x in result :
-            print('#########################' + x.nomJ + '######################')
-        return result'''

@@ -12,6 +12,7 @@ class noeud_opt:
         self.nom = nom
         self. ligne_script = ligne_script
         self.fils = []
+        self.protected = False
         #self.parent = []
     
     """def add_parent(self, noeud):

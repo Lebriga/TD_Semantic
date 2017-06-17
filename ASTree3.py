@@ -150,7 +150,6 @@ pop eax
  ####################################
  ###################################
  ###################################
-import arbre_opti
 import arbre_blocks
 import re
 
@@ -203,6 +202,10 @@ def optimize(motif):
 def traiter_arbre(liste_blocks):
     for i in liste_blocks:
         i.traitement()
+    for i in liste_blocks:
+        i.proteger()
+    for i in liste_blocks:
+        i.suppresion()
 
 def create_arbre(motif, liste_blocks):
     #Sépare la phase d'initialisation du corps du programme :

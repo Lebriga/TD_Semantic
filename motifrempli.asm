@@ -32,12 +32,12 @@ mov eax, [Y]
 push eax
 
 pop ebx
-
+add eax, ebx
 
 
 mov eax, 1
 push eax
-
+mov eax, [X]
 pop ebx
 sub eax, ebx
 
